@@ -66,6 +66,12 @@ public class MovieController {
         return ServerResponse.success();
     }
 
+    @RequestMapping("querySingleMovie")
+    public ServerResponse querySingleMovie(Integer id){
+        movieService.querySingleMovie(id);
+        return ServerResponse.success();
+    }
+
     }
 
 

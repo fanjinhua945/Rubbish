@@ -16,4 +16,8 @@ public interface MovieTypeMapper {
     void deleteMovieType(Integer id);
 
     void addMovieType(MovieType area);
+
+    MovieType querySingleMovieType(Integer id);
+
+    void updateMovieType(MovieType movieType);
 }

@@ -63,6 +63,8 @@
 
     var addMovieTypeDivHTML;
 
+    var updateMovieTypeDivHTML;
+
     var chinese = {
         "sProcessing": "处理中...",
         "sLengthMenu": "显示 _MENU_ 项结果",
@@ -114,12 +116,12 @@
             buttons:{
                 //設置確定按鈕的文字和樣式
                 confirm:{
-                    label:"确认取消",
+                    label:"确认",
                     className:"btn btn-danger"
                 },
                 //設置取消按鈕的文字和樣式
                 cancel:{
-                    label:"暂不取消",
+                    label:"取消",
                     className:"btn btn-success"
                 }
             },
@@ -259,6 +261,78 @@
                     });
                 }
                 $("#addMovieTypeDiv").html(addMovieTypeDivHTML);
+            }
+        });
+    }
+
+
+    function showUpdateMovieTypeDialog(id) {
+        $.ajax({
+            url:basePath+"/MovieTypeController/querySingleMovieType",
+            data:{id:id},
+            dataType:"json",
+            async:false,
+            success:function(result){
+                if(result.code == 200){
+                    var movieType = result.data;
+
+                    //回显修改角色表单中的数据了
+                    $("#id").val(movieType.id);
+                    $("#updateName").val(movieType.name);
+
+                    //弹出修改角色对话框
+                    bootbox.confirm({
+                        title:"修改地区",
+                        message:$("#updateMovieTypeDiv").children(),
+                        buttons:{
+                            //設置確定按鈕的文字和樣式
+                            confirm:{
+                                label:"確認",
+                                className:"btn btn-success"
+                            },
+                            //設置取消按鈕的文字和樣式
+                            cancel:{
+                                label:"取消",
+                                className:"btn btn-danger"
+                            }
+                        },
+                        callback:function(result){
+                            if(result){
+                                var param = {};
+                                //获取修改电影类型表单中的数据
+                                param.id = movieType.id;
+                                param.name = $("#updateName").val();
+                                //发起一个修改角色的ajax请求
+                                $.ajax({
+                                    url:basePath+"/MovieTypeController/updateMovieType",
+                                    type:"put",
+                                    data:param,
+                                    dataType:"json",
+                                    success:function(result){
+                                        if(result.code == 200){
+                                            //重新加载表格中的数据
+                                            search();
+                                        }else{
+                                            alert("修改失败!");
+                                        }
+                                    },
+                                    error:function(){
+                                        alert("修改失败!");
+                                    }
+                                });
+
+
+                            }
+                            $("#updateMovieTypeDiv").html(updateMovieTypeDivHTML);
+                        }
+                    });
+
+                }else{
+                    alert("查询失败!");
+                }
+            },
+            error:function(){
+
             }
         });
     }
@@ -411,6 +485,21 @@
             <label class="col-sm-2 control-label">类型名称</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="addName" placeholder="请输⼊类型名称">
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<!--修改品牌的DIV-->
+<div id="updateMovieTypeDiv" style="display: none">
+    <!--修改品牌的form表单-->
+    <form id="updateMovieTypeForm" class="form-horizontal">
+        <div class="form-group">
+            <input type="hidden" id="id" value="" />
+            <label class="col-sm-2 control-label">类型名称</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="updateName" placeholder="请输⼊类型名称">
             </div>
         </div>
 

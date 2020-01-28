@@ -5,6 +5,8 @@ import com.fh.service.AreaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("AreaController")
@@ -32,8 +34,19 @@ public class AreaController {
         return ServerResponse.success();
     }
 
-
+    @PutMapping("updateArea")
+    public ServerResponse updateArea(Area area){
+        areaService.updateArea(area);
+        return ServerResponse.success();
     }
+
+    @RequestMapping("querySingleArea")
+    public ServerResponse querySingleArea(Integer id){
+        Area area =areaService.querySingleArea(id);
+        return ServerResponse.success(area);
+    }
+
+}
 
 
 

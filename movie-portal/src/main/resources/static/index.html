@@ -62,6 +62,7 @@
     }
 
     var addMovieDivHTML;
+    var updateMovieDivHTML;
 
     var chinese = {
         "sProcessing": "处理中...",
@@ -402,6 +403,129 @@
                     });
                 }
                 $("#addMovieDiv").html(addMovieDivHTML);
+            }
+        });
+    }
+
+    function showUpdateMovieDialog() {
+        //地区多选框
+        $.ajax({
+            url:basePath+"/MovieController/queryAreaList",
+            dataType:"json",
+            success:function(result){
+                if(result.code==200){
+                    var movieAreaHtml="";
+                    for(var i =0;i<result.data.length;i++){
+                        movieAreaHtml += '<label class="checkbox-inline">';
+                        movieAreaHtml += '<input type="checkbox" name="updateMovie" value="' + result.data[i].id + '">' + result.data[i].name;
+                        movieAreaHtml += '</label>';
+                    }
+                    $("#updateAreaDiv").html(movieAreaHtml);
+                }else{
+                    alert("地区暂无法选择")
+                }
+            }
+        });
+        //类型多选框
+        $.ajax({
+            url:basePath+"/MovieController/queryMovieTypeList",
+            dataType:"json",
+            success:function(result){
+                if(result.code==200){
+                    var movieMovieTypeHtml="";
+                    for(var i =0;i<result.data.length;i++){
+                        movieMovieTypeHtml += '<label class="checkbox-inline">';
+                        movieMovieTypeHtml += '<input type="checkbox" name="updateMovie" value="' + result.data[i].id + '">' + result.data[i].name;
+                        movieMovieTypeHtml += '</label>';
+                    }
+                    $("#updateMovieTypeDiv").html(movieMovieTypeHtml);
+                }else{
+                    alert("类型暂无法选择")
+                }
+            }
+        });
+
+        //初始化新增电影表单中的电影图片文件域
+        $("#updateFile").fileinput({
+            language:"zh",//设置语言选项
+            maxFileCount:1,//设置最大上传文件个数
+            //设置文件上传的地址
+            uploadUrl:basePath+"/MovieController/uploadFile"
+        });
+        //设置文件上传之后的回调函数
+        $("#updateFile").on("fileuploaded",function(a,b,c,d){
+            //其中b就代表服务器返回的数据
+            var result = b.response;
+            if(result.code == 200){
+                //将图片上传后的相对路径放入新增电影表单中的用于存放图片相对路径的隐藏域中
+                $("#updateFilePath").val(result.mainImages);
+            }
+        });
+
+        bootbox.confirm({
+            title:"新增电影",
+            message:$("#updateMovieDiv").children(),
+            buttons:{
+                confirm:{
+                    label:"确认"
+                },
+                cancel:{
+                    label:"取消",
+                    className:"btn btn-danger"
+                }
+            },
+            callback:function(result){
+                //如果点击了确认按钮
+                if(result){
+
+                    var param = {};
+                    //获取新增品牌表单中的数据
+                    param.name = $("#updateName").val();
+                    param.mins = $("#updateMins").val();
+                    param.mainImages = $("#updateFilePath").val();
+                    param.isHot = $("[name=updateIsHot]:checked").val();
+                    param.grade = $("#updateGrade").val();
+                    param.introduce = $("#updateIntroduce").val();
+                    var areaCheckboxes=$("[name=updateAreaDiv]:checked");
+                    if(areaCheckboxes.length>0){
+                        var areaIds = "";
+                        areaCheckboxes.each(function(i,e){
+                            areaIds += this.value + ",";
+                        });
+                        areaIds = areaIds.substring(0,areaIds.length-1);
+                        param.areaId = areaIds;
+                    }
+
+                    var movieTypeCheckboxes=$("[name=updateMovieTypeDiv]:checked");
+                    if(movieTypeCheckboxes.length>0){
+                        var typeIds = "";
+                        movieTypeCheckboxes.each(function(i,e){
+                            typeIds += this.value + ",";
+                        });
+                        typeIds = typeIds.substring(0,typeIds.length-1);
+                        param.typeId = typeIds;
+                    }
+
+                    //发起一个新增品牌的ajax请求
+                    $.ajax({
+                        url:basePath+"/MovieController/updateMovie",
+                        type:"post",
+                        data:param,
+                        dataType:"json",
+                        success:function(result){
+                            if(result.code == 200){
+                                //重新加载表格中的数据
+                                search();
+                            }else{
+                                alert("修改失败!");
+                            }
+                        },
+                        error:function(){
+                            alert("修改失败!");
+                        }
+                    });
+                }
+                $("#updateMovieDiv").html(updateMovieDivHTML);
             }
         });
     }

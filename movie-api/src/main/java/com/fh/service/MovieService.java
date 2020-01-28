@@ -14,4 +14,6 @@ public interface MovieService {
     List<Area> queryAreaList();
 
     void addMovie(Movie movie);
+
+    void querySingleMovie(Integer id);
 }

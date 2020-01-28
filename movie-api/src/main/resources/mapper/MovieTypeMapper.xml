@@ -45,11 +45,22 @@
         select count(*) from fh_movie_type
     </select>
 
+    <select id="querySingleMovieType" parameterType="Integer" resultType="MovieType">
+        select * from fh_movie_type
+        where id= #{whatever}
+    </select>
+
     <insert id="addMovieType" parameterType="MovieType">
         insert into fh_movie_type (name,createTime)
                values (#{name},#{createTime});
     </insert>
-    
+
+    <update id="updateMovieType" parameterType="MovieType">
+        update fh_movie_type set
+               name=#{name},updateTime=#{updateTime}
+               where id = #{id}
+    </update>
+
     <delete id="deleteMovieType" parameterType="Integer">
         delete from fh_movie_type
         where id = #{id}

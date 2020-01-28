@@ -33,4 +33,16 @@ public class AreaServiceImpl implements AreaService {
         area.setCreateTime(new Date());
         areaMapper.addArea(area);
     }
+
+    @Override
+    public Area querySingleArea(Integer id) {
+        return areaMapper.querySingleArea(id);
+    }
+
+    @Override
+    public void updateArea(Area area) {
+        area.setUpdateTime(new Date());
+        areaMapper.updateArea(area);
+    }
+
 }

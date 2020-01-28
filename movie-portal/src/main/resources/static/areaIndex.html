@@ -62,6 +62,7 @@
     }
 
     var addAreaDivHTML;
+    var updateAreaDivHTML;
 
     var chinese = {
         "sProcessing": "处理中...",
@@ -262,6 +263,81 @@
             }
         });
     }
+
+    function showUpdateAreaDialog(id) {
+        $.ajax({
+            url:basePath+"/AreaController/querySingleArea",
+            data:{id:id},
+            dataType:"json",
+            success:function(result){
+                if(result.code == 200){
+                    var area = result.data;
+
+                    //回显修改角色表单中的数据了
+                    $("#updateName").val(area.name);
+
+                    //弹出修改角色对话框
+                    bootbox.confirm({
+                        title:"修改地区",
+                        message:$("#updateAreaDiv").children(),
+                        buttons:{
+                            //設置確定按鈕的文字和樣式
+                            confirm:{
+                                label:"確認",
+                                className:"btn btn-success"
+                            },
+                            //設置取消按鈕的文字和樣式
+                            cancel:{
+                                label:"取消",
+                                className:"btn btn-danger"
+                            }
+                        },
+                        callback:function(result){
+                            if(result){
+
+
+                                var param = {};
+                                //获取修改角色表单中的数据
+                                param.id = area.id;
+                                param.name = $("#updateName").val();
+                                //发起一个修改角色的ajax请求
+                                $.ajax({
+                                    url:basePath+"/AreaController/updateArea",
+                                    type:"put",
+                                    data:param,
+                                    dataType:"json",
+                                    success:function(result){
+                                        if(result.code == 200){
+                                            //重新加载表格中的数据
+                                            search();
+                                        }else{
+                                            alert("修改失败!");
+                                        }
+                                    },
+                                    error:function(){
+                                        alert("修改失败!");
+                                    }
+                                });
+
+
+                            }
+                            $("#updateAreaDiv").html(updateAreaDivHTML);
+                        }
+                    });
+
+                }else{
+                    alert("查询失败!");
+                }
+            },
+            error:function(){
+
+            }
+        });
+
+
+
+
+    }
 </script>
 
 <!-- 引入导航栏 -->
@@ -411,6 +487,20 @@
             <label class="col-sm-2 control-label">地区名称</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="addName" placeholder="请输⼊地区名称">
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<!--新增品牌的DIV-->
+<div id="updateAreaDiv" style="display: none">
+    <!--新增品牌的form表单-->
+    <form id="updateAreaForm" class="form-horizontal">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">地区名称</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="updateName" placeholder="请输⼊地区名称">
             </div>
         </div>
 

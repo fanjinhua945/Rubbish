@@ -56,6 +56,11 @@
         select * from fh_movie_area
     </select>
 
+    <select id="querySingleMovie" parameterType="Integer" resultType="Movie">
+        select * from fh_movie
+        where id= #{whatever}
+    </select>
+
     <insert id="addMovie" parameterType="Movie">
         insert into fh_movie (name,mins,mainImages,isHot,grade,showTime,
                introduce,createTime,updateTime,areaId,typeId)

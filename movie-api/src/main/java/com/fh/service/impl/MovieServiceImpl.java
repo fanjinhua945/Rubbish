@@ -43,4 +43,9 @@ public class MovieServiceImpl implements MovieService {
         movie.setCreateTime(new Date());
         movieMapper.addMovie(movie);
     }
+
+    @Override
+    public void querySingleMovie(Integer id) {
+        movieMapper.querySingleMovie(id);
+    }
 }

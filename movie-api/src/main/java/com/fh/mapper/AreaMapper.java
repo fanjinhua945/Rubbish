@@ -16,4 +16,9 @@ public interface AreaMapper {
     void deleteArea(Integer id);
 
     void addArea(Area area);
+
+    void updateArea(Area area);
+
+    Area querySingleArea(Integer id);
+
 }

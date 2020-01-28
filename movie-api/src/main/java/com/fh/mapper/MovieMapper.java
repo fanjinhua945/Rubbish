@@ -22,4 +22,6 @@ public interface MovieMapper {
     List<Area> queryAreaList();
 
     void addMovie(Movie movie);
+
+    void querySingleMovie(Integer id);
 }

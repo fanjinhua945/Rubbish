@@ -35,4 +35,14 @@ public class MovieTypeServiceImpl implements MovieTypeService {
         movieType.setCreateTime(new Date());
         movieTypeMapper.addMovieType(movieType);
     }
+
+    @Override
+    public MovieType querySingleMovieType(Integer id) {
+        return movieTypeMapper.querySingleMovieType(id);
+    }
+
+    @Override
+    public void updateMovieType(MovieType movieType) {
+        movieTypeMapper.updateMovieType(movieType);
+    }
 }

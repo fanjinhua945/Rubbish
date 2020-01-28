@@ -6,10 +6,7 @@ import com.fh.model.DataTableResult;
 import com.fh.model.ServerResponse;
 import com.fh.service.MovieTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -37,9 +34,19 @@ public class MovieTypeController {
         movieTypeService.addMovieType(movieType);
         return ServerResponse.success();
     }
-
-
+    @RequestMapping("querySingleMovieType")
+    public ServerResponse querySingleMovieType(Integer id) {
+        MovieType movieType = movieTypeService.querySingleMovieType(id);
+        return ServerResponse.success(movieType);
     }
+
+    @PutMapping("updateMovieType")
+    public ServerResponse updateMovieType(MovieType movieType){
+        movieTypeService.updateMovieType(movieType);
+        return ServerResponse.success();
+    }
+
+}
 
 
 
